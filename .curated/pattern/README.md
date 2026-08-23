@@ -315,3 +315,4 @@ description: [一句话描述做什么 + 什么时候触发]
 ### <font style="color:rgb(44, 44, 43);">精选列表</font>
 + [<font style="color:rgb(0, 128, 255) !important;">VoltAgent/awesome-agent-skills</font>](https://github.com/VoltAgent/awesome-agent-skills)<font style="color:rgb(44, 44, 43);"> — 500+ Skill 索引</font>
 + [<font style="color:rgb(0, 128, 255) !important;">travisvn/awesome-claude-skills</font>](https://github.com/travisvn/awesome-claude-skills)<font style="color:rgb(44, 44, 43);"> — 精选列表 + Skill vs MCP 对比</font>
++ [<font style="color:rgb(0, 128, 255) !important;">ComposioHQ/awesome-claude-skills</font>](https://github.com/ComposioHQ/awesome-claude-skills)<font style="color:rgb(44, 44, 43);"> — 精选列表Skill列表</font>
