@@ -141,11 +141,45 @@
 
 
 ### <font style="color:rgb(44, 44, 43);">模式 5：多阶段 + 检查点 + Skill 编排</font>
-**<font style="color:rgb(44, 44, 43);">适用场景</font>**<font style="color:rgb(44, 44, 43);">：复杂的多周流程，需要在关键节点做 Go/No-Go 决策。</font>
+**适用场景**<font style="color:rgb(31, 35, 40);">：跨多个阶段、需在关键节点做 Go/No-Go 决策的复杂流程——无论是分钟级的多 Agent 自动化流水线，还是数周的人类引导式工作坊。</font>
 
-**<font style="color:rgb(44, 44, 43);">代表</font>**<font style="color:rgb(44, 44, 43);">：</font>[<font style="color:rgb(0, 128, 255) !important;">deanpeters/Product-Manager-Skills — discovery-process</font>](https://github.com/deanpeters/Product-Manager-Skills/tree/main/skills/discovery-process)<font style="color:rgb(44, 44, 43);">（502 行）</font>
+#### <font style="color:rgb(31, 35, 40);">代表 1（自动化执行极，通用性更强、机制更密）</font>
+[trailofbits/skills — zeroize-audit](https://github.com/trailofbits/skills/tree/main/plugins/zeroize-audit/skills/zeroize-audit)<font style="color:rgb(31, 35, 40);">（SKILL.md 360 行；11 个子 Agent、8 阶段）</font>
 
-**<font style="color:rgb(44, 44, 43);">结构</font>**<font style="color:rgb(44, 44, 43);">：</font>
+**结构**<font style="color:rgb(31, 35, 40);">：</font>
+
+```markdown
+# 标题
+## When to Use / When NOT to Use
+## Inputs / Prerequisites（含 fail-fast vs 降级 失败模式表）
+## Finding Capabilities（11 种发现 × 必需证据通道）
+## Agent Architecture（11 Agent × 8 Phase + Wave 并行 + ID 命名空间）
+### Phase 0~7（统一模板：Preconditions → Instructions → State Update → Error Handling → Next Phase）
+## Confidence Gating（硬证据门 + 量化信号）
+## PoC 双闭环（generator → validator → verifier → 人在回路）
+## Rationalizations to Reject（借口反驳表）
+## Fix Recommendations
+```
+
+**关键技巧**<font style="color:rgb(31, 35, 40);">：</font>
+
+| <font style="color:rgb(31, 35, 40);">技巧</font> | <font style="color:rgb(31, 35, 40);">示例</font> | <font style="color:rgb(31, 35, 40);">为什么有效</font> |
+| --- | --- | --- |
+| **统一阶段模板** | <font style="color:rgb(31, 35, 40);">每个 Phase = Preconditions → Instructions → State Update → Error Handling → Next Phase</font> | <font style="color:rgb(31, 35, 40);">LLM 快速理解结构，且天然可断点续跑</font> |
+| **决策检查点 / 早终止** | <font style="color:rgb(31, 35, 40);">零敏感对象 → 跳 Phase 6；findings 空 → 跳 4-5；Phase 5c 让人对失败 PoC 做 Accept/Reject</font> | <font style="color:rgb(31, 35, 40);">防盲目推进 + 唯一人在回路兜底</font> |
+| **Agent 编排（并行）** | <font style="color:rgb(31, 35, 40);">编排器调度 11 子 Agent，含 N 个并行 TU、Wave 2a‖2b 并行</font> | <font style="color:rgb(31, 35, 40);">大 Skill 调度小 Agent，并行省时、隔离容错</font> |
+| **文件即状态** | `<font style="color:rgb(31, 35, 40);">orchestrator-state.json</font>`<font style="color:rgb(31, 35, 40);"> + workdir 当总线，不靠对话历史</font> | <font style="color:rgb(31, 35, 40);">抗 context 压缩、断点可恢复</font> |
+| **硬证据门** | <font style="color:rgb(31, 35, 40);">OPTIMIZED_AWAY 必须 IR diff；栈/寄存器残留必须汇编</font> | <font style="color:rgb(31, 35, 40);">杜绝"仅凭源码"误报</font> |
+| **对抗式验证** | <font style="color:rgb(31, 35, 40);">PoC 生成(5) 与独立核验(5c) 分离，5c 专挑 5 的刺</font> | <font style="color:rgb(31, 35, 40);">防自我确认偏误</font> |
+| **借口反驳表** | <font style="color:rgb(31, 35, 40);">7 种压低发现的借口被逐一拒绝，用借口就保留原置信度并记 evidence</font> | <font style="color:rgb(31, 35, 40);">堵死 LLM 偷懒逃避</font> |
+
+
+**适用判断**<font style="color:rgb(31, 35, 40);">：如果你的 Skill 是技术 / 自动化类多阶段任务（安全审计、批量分析、迁移验证等），需要机器并行、证据门、对抗式自验、断点续跑，用 zeroize-audit 这种"自动化执行极"。</font>
+
+#### <font style="color:rgb(31, 35, 40);">代表 2（人类工作坊极）</font>
+[deanpeters/Product-Manager-Skills — discovery-process](https://github.com/deanpeters/Product-Manager-Skills/tree/main/skills/discovery-process)<font style="color:rgb(31, 35, 40);">（516 行）</font>
+
+**结构**<font style="color:rgb(31, 35, 40);">：</font>
 
 ```markdown
 # 标题
@@ -160,18 +194,19 @@
 ## References（引用的子 Skill 列表）
 ```
 
-**<font style="color:rgb(44, 44, 43);">关键技巧</font>**<font style="color:rgb(44, 44, 43);">：</font>
+**关键技巧**<font style="color:rgb(31, 35, 40);">：</font>
 
-| <font style="color:rgb(44, 44, 43);">技巧</font> | <font style="color:rgb(44, 44, 43);">示例</font> | <font style="color:rgb(44, 44, 43);">为什么有效</font> |
+| <font style="color:rgb(31, 35, 40);">技巧</font> | <font style="color:rgb(31, 35, 40);">示例</font> | <font style="color:rgb(31, 35, 40);">为什么有效</font> |
 | --- | --- | --- |
-| **<font style="color:rgb(44, 44, 43);">统一阶段模板</font>** | <font style="color:rgb(44, 44, 43);">每个 Phase 都有 Activities → Outputs → Decision Point</font> | <font style="color:rgb(44, 44, 43);">LLM 快速理解结构</font> |
-| **<font style="color:rgb(44, 44, 43);">决策检查点</font>** | <font style="color:rgb(44, 44, 43);">"达到饱和了吗？YES → 下一阶段，NO → +1 周"</font> | <font style="color:rgb(44, 44, 43);">防止盲目推进</font> |
-| **<font style="color:rgb(44, 44, 43);">Skill 编排</font>** | <font style="color:rgb(44, 44, 43);">调度 10+ 个子 Skill 完成各阶段</font> | <font style="color:rgb(44, 44, 43);">编排器模式，大 Skill 调度小 Skill</font> |
-| **<font style="color:rgb(44, 44, 43);">时间影响</font>** | <font style="color:rgb(44, 44, 43);">每个 NO 路径标注"+2-3 days"、"+1 week"</font> | <font style="color:rgb(44, 44, 43);">让用户了解延迟成本</font> |
-| **<font style="color:rgb(44, 44, 43);">交互协议分离</font>** | <font style="color:rgb(44, 44, 43);">引用 </font>`<font style="color:rgb(44, 44, 43);">workshop-facilitation</font>`<font style="color:rgb(44, 44, 43);"> 定义交互方式</font> | <font style="color:rgb(44, 44, 43);">关注点分离</font> |
+| **统一阶段模板** | <font style="color:rgb(31, 35, 40);">每个 Phase 都有 Activities → Outputs → Decision Point</font> | <font style="color:rgb(31, 35, 40);">LLM 快速理解结构</font> |
+| **决策检查点** | <font style="color:rgb(31, 35, 40);">"达到饱和了吗？YES → 下一阶段，NO → +1 周"</font> | <font style="color:rgb(31, 35, 40);">防止盲目推进</font> |
+| **Skill 编排** | <font style="color:rgb(31, 35, 40);">调度 10+ 个子 Skill 完成各阶段</font> | <font style="color:rgb(31, 35, 40);">编排器模式，大 Skill 调度小 Skill</font> |
+| **时间影响** | <font style="color:rgb(31, 35, 40);">每个 NO 路径标注"+2-3 days"、"+1 week"</font> | <font style="color:rgb(31, 35, 40);">让用户了解延迟成本</font> |
+| **交互协议分离** | <font style="color:rgb(31, 35, 40);">引用 </font>`<font style="color:rgb(31, 35, 40);">workshop-facilitation</font>`<font style="color:rgb(31, 35, 40);"> 定义交互方式</font> | <font style="color:rgb(31, 35, 40);">关注点分离</font> |
 
 
-**<font style="color:rgb(44, 44, 43);">适用判断</font>**<font style="color:rgb(44, 44, 43);">：如果你的 Skill 跨越多天/多周，有明确的阶段划分和 Go/No-Go 决策点，就用多阶段模式。</font>
+**适用判断**<font style="color:rgb(31, 35, 40);">：如果你的 Skill 跨越多天 / 多周、面向人类引导式工作坊，有明确阶段划分和 Go/No-Go 决策点，用 discovery-process 这种"人类工作坊极"。</font>
+
 
 ### <font style="color:rgb(44, 44, 43);">特殊模式：思维框架（控制 LLM "怎么想"）</font>
 **<font style="color:rgb(44, 44, 43);">适用场景</font>**<font style="color:rgb(44, 44, 43);">：安全审计、代码审查、架构分析等需要深度思考的场景。</font>
