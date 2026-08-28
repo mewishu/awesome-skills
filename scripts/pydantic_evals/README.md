@@ -103,3 +103,6 @@ my_dataset.evaluate_sync(my_task)
 ```
 
 [Read more about the Logfire integration here.](https://pydantic.dev/docs/ai/evals/how-to/logfire-integration/)
+
+## 参考资源
++ [inspect_ai](https://github.com/UKGovernmentBEIS/inspect_ai/blob/main/src/inspect_ai/_eval/score.py)
